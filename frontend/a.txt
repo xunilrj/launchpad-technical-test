@@ -1,0 +1,87 @@
+[2J[3J[HSnowpack
+
+  Server starting…
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+[2J[3J[HSnowpack
+
+  Server starting…
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+▼ Console
+
+  [log] ! updating dependencies...
+
+[2J[3J[HSnowpack
+
+  Server starting…
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+▼ Console
+
+  [log] ! updating dependencies...
+  [log] 
+    ⦿ web_modules/        size       gzip       brotli   
+      ├─ preact.js        9.51 KB    3.8 KB     3.49 KB
+      └─ preact/hooks.js  2.52 KB    1.08 KB    0.98 KB
+
+[2J[3J[HSnowpack
+
+  http://localhost:8080 > http://172.30.89.149:8080 > http://172.18.0.1:8080
+  Server started in 269ms.
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+▼ Console
+
+  [log] ! updating dependencies...
+  [log] 
+    ⦿ web_modules/        size       gzip       brotli   
+      ├─ preact.js        9.51 KB    3.8 KB     3.49 KB
+      └─ preact/hooks.js  2.52 KB    1.08 KB    0.98 KB
+
+[2J[3J[HSnowpack
+
+  http://localhost:8080 > http://172.30.89.149:8080 > http://172.18.0.1:8080
+  Server started in 269ms.
+
+  mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+▼ Console
+
+  [log] ! updating dependencies...
+  [log] 
+    ⦿ web_modules/        size       gzip       brotli   
+      ├─ preact.js        9.51 KB    3.8 KB     3.49 KB
+      └─ preact/hooks.js  2.52 KB    1.08 KB    0.98 KB
+
+[2J[3J[HSnowpack
+
+  http://localhost:8080 > http://172.30.89.149:8080 > http://172.18.0.1:8080
+  Server started in 269ms.
+
+  mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
+  mount:index.............[DONE] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+▼ Console
+
+  [log] ! updating dependencies...
+  [log] 
+    ⦿ web_modules/        size       gzip       brotli   
+      ├─ preact.js        9.51 KB    3.8 KB     3.49 KB
+      └─ preact/hooks.js  2.52 KB    1.08 KB    0.98 KB
+

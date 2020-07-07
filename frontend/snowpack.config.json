@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "mount:index": "mount wwwroot --to /"
+    },
+    "devOptions": {
+        "bundle": false
+    },
+    "proxy": {
+        "/search": "http://localhost:8000/search"
+    }
+}
