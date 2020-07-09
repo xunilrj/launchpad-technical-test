@@ -22,3 +22,20 @@ impl<TA: PartialEq, TB> PartialEq for OrdFirst<TA, TB> {
         self.0 == other.0
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[quickcheck]
+    fn cmp_ord_first_must_follow_first_item(a: i32, b: i32) -> bool {
+        a.cmp(&b) == OrdFirst(a, 0).cmp(&OrdFirst(b, 0))
+    }
+    #[quickcheck]
+    fn partial_cmp_ord_first_must_follow_first_item(a: i32, b: i32) -> bool {
+        a.partial_cmp(&b) == OrdFirst(a, 0).partial_cmp(&OrdFirst(b, 0))
+    }
+    #[quickcheck]
+    fn eq_ord_first_must_follow_first_item(a: i32, b: i32) -> bool {
+        a.eq(&b) == OrdFirst(a, 0).eq(&OrdFirst(b, 0))
+    }
+}

@@ -1,5 +1,11 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+#[cfg(test)]
+extern crate quickcheck;
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
+
 use async_channel::Sender;
 use futures::StreamExt;
 use palette::{IntoColor, Srgb};
