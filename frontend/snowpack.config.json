@@ -1,6 +1,8 @@
 {
     "scripts": {
-        "mount:index": "mount wwwroot --to /"
+        "mount:index": "mount wwwroot --to /",
+        "mount:fontawesome-css": "mount node_modules/@fortawesome/fontawesome-free/css --to /fontawesome",
+        "mount:fontawesome-fonts": "mount node_modules/@fortawesome/fontawesome-free/webfonts --to /webfonts"
     },
     "devOptions": {
         "bundle": false
