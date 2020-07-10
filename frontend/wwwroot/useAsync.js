@@ -5,12 +5,12 @@ export default function useAsync(asyncFunction, immediate = true) {
     const [value, setValue] = useState(null);
     const [error, setError] = useState(null);
 
-    const execute = useCallback(() => {
+    const execute = useCallback((...args) => {
         setError(null);
         setPending(true);
         setValue(null);
 
-        return asyncFunction()
+        return asyncFunction(...args)
             .then((response) => setValue(response))
             .catch((err) => setError(err))
             .finally(() => setPending(false));
