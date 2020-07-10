@@ -1,0 +1,9 @@
+#! /bin/bash
+
+kubectl apply -f elasticsearch.Service.yml
+kubectl apply -f elasticsearch.Deployment.yml
+
+kubectl apply -f fluentd.ClusterRoleBinding.yml
+kubectl apply -f fluentd.rbac.yml
+kubectl apply -f fluentd.DaemonSet.yml
+kubectl apply -f fluentd.ServiceAccount.yml

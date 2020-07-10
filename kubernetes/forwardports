@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo "service/elasticsearch 9200:9200"
+kubectl port-forward service/elasticsearch 9200:9200 & > /dev/null
+wait
