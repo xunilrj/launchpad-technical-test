@@ -16,6 +16,7 @@ use warp::Filter;
 
 mod actors;
 mod colors;
+mod loggable;
 mod ord;
 mod reddit;
 use actors::dominant_color::{spawn_dominant_color, DominantColorDistanceMessage};
