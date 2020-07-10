@@ -24,5 +24,23 @@ Stage 2: Improve the service so that it:
 
 ## Frontend
 
- - Snowpack
- - Preact
+ - Snowpack https://www.snowpack.dev/  
+ - Preact https://preactjs.com/  
+ - Flickity https://github.com/metafizzy/flickity
+ - Vanilla Picker https://github.com/Sphinxxxx/vanilla-picker
+ - Loading Bar https://loading.io/progress/    
+
+## Backend
+
+ - Rust https://www.rust-lang.org/  
+ - Warp https://github.com/seanmonstar/warp  
+ - Quickcheck https://github.com/BurntSushi/quickcheck   
+ - async-channel https://github.com/stjepang/async-channel  
+ - Oneshot https://github.com/faern/oneshot
+ - kmeans_colors https://github.com/okaneco/kmeans-colors  
+
+## Deploy
+
+ - kinD https://github.com/kubernetes-sigs/kind  
+ - Fluentd https://www.fluentd.org/  
+ - Elasticsearch https://www.elastic.co/  
