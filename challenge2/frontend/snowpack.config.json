@@ -1,0 +1,13 @@
+{
+    "scripts": {
+        "mount:index": "mount wwwroot --to /"
+    },
+    "devOptions": {
+        "bundle": false
+    },
+    "proxy": {
+        "/spots.json": "https://s3.eu-west-2.amazonaws.com/lpad-public-assets/software-test/all-spots.json",
+        "/weather": "https://api.openweathermap.org/data/2.5/box/city",
+        "/onecall": "https://api.openweathermap.org/data/2.5/onecall"
+    }
+}

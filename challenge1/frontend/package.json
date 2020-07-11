@@ -12,7 +12,6 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.1",
     "@rooks/use-input": "^3.6.0",
-    "codemirror-colorpicker": "^1.9.70",
     "flickity": "^2.2.1",
     "react-hanger": "^2.2.1",
     "snowpack": "^2.6.3",

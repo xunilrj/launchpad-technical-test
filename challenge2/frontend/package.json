@@ -1,0 +1,21 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "boundingbox": "^1.2.3",
+    "leaflet": "^1.6.0",
+    "preact-render-to-string": "^5.1.9",
+    "rbush": "^3.0.1",
+    "rbush-knn": "^3.0.1",
+    "rstar-wasm": "^0.1.4",
+    "snowpack": "^2.6.4"
+  }
+}
