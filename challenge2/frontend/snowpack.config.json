@@ -1,6 +1,8 @@
 {
     "scripts": {
-        "mount:index": "mount wwwroot --to /"
+        "mount:index": "mount wwwroot --to /",
+        "mount:geoSearch": "mount node_modules/leaflet-geosearch/dist --to /geosearch",
+        "mount:greatCircle": "mount node_modules/Leaflet.GreatCircle/dist --to /greatCircle"
     },
     "devOptions": {
         "bundle": false
@@ -8,6 +10,8 @@
     "proxy": {
         "/spots.json": "https://s3.eu-west-2.amazonaws.com/lpad-public-assets/software-test/all-spots.json",
         "/weather": "https://api.openweathermap.org/data/2.5/box/city",
-        "/onecall": "https://api.openweathermap.org/data/2.5/onecall"
+        "/onecall": "https://api.openweathermap.org/data/2.5/onecall",
+        "/directions": "https://maps.googleapis.com/maps/api/directions/json",
+        "/drivedistance": "http://maps.googleapis.com/maps/api/distancematrix/json"
     }
 }

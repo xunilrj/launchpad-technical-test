@@ -4,12 +4,60 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
+    <style>
+        .leaflet-tile-pane .leaflet-layer:nth-child(1) .leaflet-tile-loaded {
+            filter: saturate(20%);
+        }
+
+        .saturate30 {
+            filter: saturate(30%)
+        }
+
+        .saturateOnHover {
+            filter: saturate(30%)
+        }
+
+        .saturateOnHover:hover {
+            filter: saturate(100%)
+        }
+
+        .windInfo.empty {
+            position: absolute;
+            overflow: hidden;
+            width: 20px;
+            height: 20px;
+            left: calc(100vw - 60px);
+            top: calc(100vh - 75px);
+            padding: 10px;
+            z-index: 10;
+            background: white;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            transition: all 0.5s;
+            transition-timing-function: cubic-bezier(0.64, 0.57, 0.67, 1.53);
+        }
+
+        .windInfo.full {
+            position: absolute;
+            overflow: hidden;
+            width: 250px;
+            height: 350px;
+            left: calc(100vw - 290px);
+            top: calc(100vh - 405px);
+            padding: 10px;
+            z-index: 10;
+            background: white;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            transition: all 0.5s;
+            transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+    </style>
+    <link rel="stylesheet" href="geosearch/geosearch.css" />
 </head>
 
-<body>
-
+<body style="overflow: hidden">
     <div id="app" style="width:100wv;height:100hv"></div>
-
     <script type="module" src="index.js"></script>
 </body>
 
