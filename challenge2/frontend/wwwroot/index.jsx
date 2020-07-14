@@ -12,9 +12,9 @@ import '@skyraptor/leaflet.bouncemarker';
 import './greatCircle.js';
 import 'leaflet.polyline.snakeanim';
 
-const cluster = new Supercluster();
-const tree = new RBush();
-const markersTree = new RBush();
+let cluster = new Supercluster();
+let tree = new RBush();
+let markersTree = new RBush();
 let spots;
 
 async function getSpots() {
@@ -42,7 +42,7 @@ async function getWeather(map) {
     return getWeatherBB(mapbb, 15);
 }
 
-async function getHistory(spot) {
+async function getWeatherHistory(spot) {
     const url = `onecall?lat=${spot.latitude}&lon=${spot.longitude}&exclude=minutily&appid=7c5cef09fcfe08e6eb62d06c3f6ad76d`;
     const response = await fetch(url, { mode: 'cors' });
     const json = await response.json();
@@ -118,9 +118,9 @@ function ms2Knot(ms) {
     return 1.9438445 * ms;
 }
 
-function centerLeafletMapOnMarker(map, marker) {
+function centerLeafletMapOnMarker(map, marker, dlat = 0.04, dlng = 0.1, zoom = 12) {
     let ll = marker.getLatLng();
-    map.setView({ lat: ll.lat + 0.04, lng: ll.lng + 0.1 }, 12);
+    map.setView({ lat: ll.lat + dlat, lng: ll.lng + dlng }, zoom);
 }
 
 function spotScore(level, windSpeed) {
@@ -168,7 +168,6 @@ function spotScoreCategory(level, score) {
 }
 
 function WindRose({ weather }) {
-    console.log(weather);
     let cx = 120;
     let cy = 90;
     let r = 100;
@@ -191,7 +190,6 @@ function WindRose({ weather }) {
     let windPercentage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let windSpeed = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (weather) {
-        console.log(weather);
         for (let h of weather.hourly) {
             const idx = Math.floor(h.wind_deg / 30);
             windPercentage[idx]++;
@@ -235,9 +233,6 @@ function WindRose({ weather }) {
     let windNowScale = 0.09 + (windNowSpeed * 0.5);
     const showNowInput = useInput(true);
     return <div>
-        <div>
-            <input type="checkbox" {...showNowInput} /><span>Show now</span>
-        </div>
         <svg width="240px" height="240">
             <g transform={`translate(${cx} ${cy + 30})`}>
                 {directions}
@@ -255,6 +250,9 @@ function WindRose({ weather }) {
                 </g>}
             </g>
         </svg>
+        <div>
+            <input type="checkbox" {...showNowInput} /><span>Show Current Wind</span>
+        </div>
     </div>;
 }
 
@@ -294,35 +292,26 @@ async function downloadWeatherData(map, cluster, q, weathers) {
     return weathers;
 }
 
-function showWeatherIcon() {
-    // const iconId = item.weather[0].icon;
-    // var icon = L.icon({
-    //     iconUrl: `http://openweathermap.org/img/wn/${iconId}.png`,
-    // });
-    // L.marker([item.coord.Lat, item.coord.Lon], { icon })
-    //     .addTo(map.current);
-}
-
 const spotBadIcon = L.divIcon({
     className: "",
     html: `<svg width="32" height="32" viewBox="0 0 512 512" transform="translate(-9 -25)">
 <path fill="#FFFFFF" d="M 256 270 C 205.602 270 166 229.2 166 180 C 166 130.499 206.499 90 256 90 S 346 130.499 346 180 C 346 228.9 306.999 270 256 270 Z" />
-<path fill="#FD003A" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
-<path fill="#E50027" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
+<path fill="#FF0000" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
+<path fill="#AA0000" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
 </svg>` });
 const spotOkIcon = L.divIcon({
     className: "",
     html: `<svg width="32" height="32" viewBox="0 0 512 512" transform="translate(-9 -25)">
 <path fill="#FFFFFF" d="M 256 270 C 205.602 270 166 229.2 166 180 C 166 130.499 206.499 90 256 90 S 346 130.499 346 180 C 346 228.9 306.999 270 256 270 Z" />
-<path fill="#24244c" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
-<path fill="#15153A" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
+<path fill="#0000FF" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
+<path fill="#0000AA" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
 </svg>` });
 const spotGoodIcon = L.divIcon({
     className: "",
     html: `<svg width="32" height="32" viewBox="0 0 512 512" transform="translate(-9 -25)">
 <path fill="#FFFFFF" d="M 256 270 C 205.602 270 166 229.2 166 180 C 166 130.499 206.499 90 256 90 S 346 130.499 346 180 C 346 228.9 306.999 270 256 270 Z" />
-<path fill="#699245" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
-<path fill="#4E772A" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
+<path fill="#00FF00" d="M256,0C156.698,0,76,80.7,76,180c0,33.6,9.302,66.301,27.001,94.501l140.797,230.414 c2.402,3.9,6.002,6.301,10.203,6.901c5.698,0.899,12.001-1.5,15.3-7.2l141.2-232.516C427.299,244.501,436,212.401,436,180 C436,80.7,355.302,0,256,0z M256,270c-50.398,0-90-40.8-90-90c0-49.501,40.499-90,90-90s90,40.499,90,90 C346,228.9,306.999,270,256,270z"/>
+<path fill="#00AA00" d="M256,0v90c49.501,0,90,40.499,90,90c0,48.9-39.001,90-90,90v241.991 c5.119,0.119,10.383-2.335,13.3-7.375L410.5,272.1c16.799-27.599,25.5-59.699,25.5-92.1C436,80.7,355.302,0,256,0z"/>
 </svg>` });
 const spotBestIcon = L.divIcon({
     className: "",
@@ -348,7 +337,6 @@ const spotBestIcon = L.divIcon({
     </svg>`
 });
 
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -363,134 +351,296 @@ async function getDirections(from, to) {
     return json;
 }
 
-function App() {
-    const ref = useRef();
-    const map = useRef();
-    const [spot, setSpot] = useState();
-    const [marker, setMarker] = useState();
-
-    const [showDistance, setShowDistance] = useState(false);
-
-    const [locationCircle, setLocationCircle] = useState();
-    const locationDistanceInput = useInput(50000, {
-        onInput: (e) => {
-            locationCircle.setRadius(e.target.value)
-        }
-    });
-    const polylineRef = useRef();
-    const [distanceType, distanceTypeRefs] = useRadio(["distance", "drive"], "distance");
-    console.log(distanceType);
+function DistanceWidget({ visible, distanceType, distanceTypeRefs, locationDistanceInput, onDistanceChanged }) {
     useEffect(() => {
-        if (locationCircle) {
-            if (polylineRef.current) {
-                map.current.removeLayer(polylineRef.current);
+        if (visible) {
+            let bars = Array.from(document.getElementsByClassName("leaflet-geosearch-bar"));
+            for (const bar of bars) {
+                bar.style.cssText = "display: none";
             }
 
-            locationCircle.setRadius(locationDistanceInput.value);
-
-            let bestScore = 0;
-            let bestItem;
-            for (const item of markersTree.all()) {
-                const itemLatLng = item.marker.getLatLng();
-                const inside = locationCircle.isInside(itemLatLng)
-                if (!inside)
-                    item.marker._icon.classList.add("saturate30");
-                else {
-                    item.marker._icon.classList.remove("saturate30");
-                    if (item.spot.score > bestScore) {
-                        bestScore = item.spot.score;
-                        bestItem = item;
-                    }
+            return () => {
+                let bars = Array.from(document.getElementsByClassName("leaflet-geosearch-bar"));
+                for (const bar of bars) {
+                    bar.style.cssText = "";
                 }
             }
+        }
+    }, [visible]);
 
-            if (bestItem) {
-                const bestSpot = bestItem.spot;
-                const bestMarker = bestItem.marker;
-                const bestLatLng = bestMarker.getLatLng();
-                (async function () {
-                    const weather = await getHistory(bestSpot);
-                    setSpot({ spot: bestSpot, weather });
-                    setMarker(bestMarker);
+    const distanceChanged = (e) => {
+        locationDistanceInput.onChange(e);
+        if (onDistanceChanged)
+            onDistanceChanged(e.target.value, false);
+    }
+    const distanceChanging = (e) => {
+        if (onDistanceChanged)
+            onDistanceChanged(e.target.value, true);
+    }
+    return <div id="distanceForm" class="box" style={`position:absolute; width:225px;  left: 88px; top: 18px; z-index: 1; ${!visible ? "display: none" : ""}`}>
+        <input type="radio" name="distanceType" {...distanceTypeRefs[0]} />
+        <label style="Background: white">Distance</label>
+        <input type="radio" name="distanceType" {...distanceTypeRefs[1]} />
+        <label>Drive Time</label>
+        <input type="range" min="1" max="100000" value="10000" style="width:220px;" {...locationDistanceInput} onChange={distanceChanged} onInput={distanceChanging} />
+    </div>;
+}
 
-                    const x = await getDirections(
-                        locationCircle.getLatLng(),
-                        bestLatLng);
-
-                    let points = [];
-                    let start = x.routes[0].legs[0].start_location;
-                    points.push([start.lat, start.lng]);
-                    for (const p of x.routes[0].legs[0].steps) {
-                        points.push([
-                            p.end_location.lat,
-                            p.end_location.lng]);
-                    }
-
-                    if (polylineRef.current) {
-                        map.current.removeLayer(polylineRef.current);
-                    }
-                    polylineRef.current = L.polyline(
-                        points,
-                        { color: 'red' })
-                        .addTo(map.current).snakeIn();
-
-                    polylineRef.current.on('snakeend', async e => {
-                        bestMarker.bounce({
-                            duration: 500,
-                            height: 30,
-                            loop: 2
-                        });
-                    });
-                })();
+function updateMarkersAsInsideOrOutside(locationCircle) {
+    let bestScore = 0;
+    let bestItem;
+    for (const item of markersTree.all()) {
+        const itemLatLng = item.marker.getLatLng();
+        const inside = locationCircle ? locationCircle.isInside(itemLatLng) : true;
+        if (!inside) {
+            item.marker._icon.classList.add("inactiveMarker");
+        } else {
+            item.marker._icon.classList.remove("inactiveMarker");
+            if (item.spot.score > bestScore) {
+                bestScore = item.spot.score;
+                bestItem = item;
             }
         }
-    }, [locationDistanceInput.value, locationCircle]);
+    }
+
+    return bestItem;
+}
+
+async function getSpotWeatherAndRoute(spot, marker, circle) {
+    const weather = await getWeatherHistory(spot);
+    const directions = await getDirections(
+        circle.getLatLng(),
+        marker.getLatLng());
+
+    let polyline;
+    if (directions && directions.routes
+        && directions.routes[0]
+        && directions.routes[0].legs
+        && directions.routes[0].legs[0]) {
+
+        let points = [];
+        let start = directions.routes[0].legs[0].start_location;
+        points.push([start.lat, start.lng]);
+
+        for (const p of directions.routes[0].legs[0].steps) {
+            points.push([p.end_location.lat, p.end_location.lng]);
+        }
+
+        polyline = L.polyline(points, { color: 'red' })
+    }
+
+    return [weather, polyline];
+}
+
+function useLeafletPolyline(map) {
+    const ref = useRef();
+    return (x, opts) => {
+        let v;
+
+        let leafletMap = map;
+        if (map.current) leafletMap = map.current;
+
+        if (ref.current) leafletMap.removeLayer(ref.current);
+        if (x) ref.current = x.addTo(leafletMap);
+
+        if (ref.current && opts && opts.snakeIn) {
+            ref.current = ref.current.snakeIn(opts.snakeIn);
+            v = new Promise((ok, rej) => {
+                ref.current.on('snakeend', ok);
+            });
+        }
+
+        return v;
+    }
+}
+
+function bestSpotNearAt(at) {
+    let lat = at[0];
+    let lng = at[1];
+    if (at.lat) lat = at.lat;
+    if (at.y) lat = at.y;
+    if (at.lng) lng = at.lng;
+    if (at.long) lng = at.long;
+    if (at.x) lng = at.x;
+
+    const near = knn(markersTree, lng, lat, 20);
+    let bestScore = 0;
+    let bestMarker;
+    let bestSpot;
+    for (const m of near) {
+        if (m.spot.score > bestScore) {
+            bestScore = m.spot.score;
+            bestMarker = m.marker;
+            bestSpot = m.spot;
+        }
+    }
+    return {
+        score: bestScore,
+        marker: bestMarker,
+        spot: bestSpot
+    };
+}
+
+async function loadAndScoreSpots(levelName, map, onClickMarker) {
+    spots = await getSpots();
+
+    const points = spots.map(x => L.latLng(x.latitude, x.longitude));
+    const bounds = L.latLngBounds(points);
+    const bb = new BoundingBox(bounds);
+
+    cluster = new Supercluster();
+    cluster.load(spots.map(x => ({
+        type: "Feature",
+        geometry: {
+            type: "Point",
+            coordinates: [x.longitude, x.latitude]
+        }
+    })));
+    const weatherInfo = await downloadWeatherData(map.current, cluster, [
+        [[bb.getWest(), bb.getSouth(), bb.getEast(), bb.getNorth()], 0]],
+        []
+    );
+    for (const item of weatherInfo) {
+        tree.insert({
+            minX: item.coord.Lon,
+            maxX: item.coord.Lon,
+            minY: item.coord.Lat,
+            maxY: item.coord.Lat,
+            item
+        });
+    }
+
+    let maxScore = 0;
+    for (const spot of spots) {
+        const near = knn(tree, spot.longitude, spot.latitude, 1)[0];
+        spot.score = spotScore(levelName, ms2Knot(near.item.wind.speed))
+        if (spot.score > maxScore) {
+            maxScore = spot.score;
+        }
+    }
+
+    let leafletMap = map;
+    if (map.current) leafletMap = map.current;
+    for (const item of markersTree.all()) {
+        leafletMap.removeLayer(item.marker);
+    }
+    markersTree = new RBush();
+
+    const icons = [spotBadIcon, spotOkIcon, spotGoodIcon, spotBestIcon];
+    for (const spot of spots) {
+        let iconIdx = spotScoreCategory(levelName, spot.score);
+        if (spot.score == maxScore)
+            iconIdx = 3;
+
+        const marker = L.marker([spot.latitude, spot.longitude], {
+            icon: icons[iconIdx],
+            offset: L.point(0, -200),
+            bouncemarker: true,
+        })
+            .on("click", e => {
+                if (onClickMarker)
+                    onClickMarker(spot, marker);
+            })
+            .addTo(leafletMap);
+
+        markersTree.insert({
+            minX: spot.longitude,
+            maxX: spot.longitude,
+            minY: spot.latitude,
+            maxY: spot.latitude,
+            marker,
+            spot
+        });
+    }
+}
+
+function getLevelName(level) {
+    let levelName = "Novice";
+    if (level == 1) levelName = "Intermediate";
+    else if (level == 2) levelName = "Expert";
+    return levelName;
+}
+
+function LevelWidget({ map, level, onNewLevel, onNewPosition }) {
+    const changeLevel = () => {
+        if (onNewLevel)
+            onNewLevel((level + 1) % 3);
+    }
+    const centerAtMe = (e) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                if (onNewPosition)
+                    onNewPosition({
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
+                    });
+            });
+        }
+    };
+    return <div class="box" style="padding-left:0px;width:54px; left:18px; top:80px; z-index:1">
+        <div style="background:white" onClick={changeLevel}>
+            <img src={`level${level}.svg`} style="width: 64px" />
+        </div>
+        {navigator.geolocation && <div onClick={centerAtMe} style="padding: 10px 0px 0px 10px;font-size:0.7em; text-align: center; cursor: pointer">
+            Best Near Me!
+        </div>}
+    </div>;
+}
+
+function useMap({ onPopupOpen, onPopupClose, onShowLocation, onLayerRemove }) {
+    const ref = useRef();
+    const map = useRef();
+
+    const onPopupOpenRef = useRef();
+    const onPopupCloseRef = useRef();
+    const onShowLocationRef = useRef();
+    const onLayerRemoveRef = useRef();
+
+    onPopupOpenRef.current = onPopupOpen;
+    onPopupCloseRef.current = onPopupClose;
+    onShowLocationRef.current = onShowLocation;
+    onLayerRemoveRef.current = onLayerRemove;
 
     useEffect(() => {
         if (!ref.current) return;
         if (map.current) return;
 
-        map.current = L.map(ref.current).setView([39.50, -98.35], 4);
+        map.current = L.map(ref.current)
+            .setView([39.50, -98.35], 4); //USA centered
+
         const provider = new OpenStreetMapProvider();
         const searchControl = new SearchControl({
             provider: provider,
             style: "bar",
-            position: "topright",
             autoClose: true,
-            keepResult: true
+            keepResult: true,
+            showPopup: false,
+            marker: {
+                icon: new L.Icon.Default(),
+                draggable: false,
+                topWidget: "distance",
+                searchMarker: true
+            },
         });
         map.current.addControl(searchControl);
-        map.current.on('geosearch/showlocation', async e => {
-            const near = knn(markersTree, e.location.x, e.location.y, 20);
-            let bestScore = 0;
-            let bestMarker;
-            let bestSpot;
-            for (const m of near) {
-                if (m.spot.score > bestScore) {
-                    bestScore = m.spot.score;
-                    bestMarker = m.marker;
-                    bestSpot = m.spot;
-                }
-            }
-
-            console.log(bestSpot);
-            const weather = await getHistory(bestSpot);
-            setSpot({ spot: bestSpot, weather });
-            setMarker(bestMarker);
-
-
-
-            const circle = L.greatCircle(L.latLng(e.location.y, e.location.x),
-                10000,
-                { fill: 'red' }).addTo(map.current);
-            setLocationCircle(circle);
-            setShowDistance(true);
+        map.current.on("popupopen", (e) => {
+            if (onPopupOpenRef.current)
+                onPopupOpenRef.current(e);
+        });
+        map.current.on("popupclose", (e) => {
+            if (onPopupCloseRef.current)
+                onPopupCloseRef.current(e);
+        });
+        map.current.on('geosearch/showlocation', (e) => {
+            if (onShowLocationRef.current)
+                onShowLocationRef.current(e);
+        });
+        map.current.on('layerremove', e => {
+            if (onLayerRemoveRef.current)
+                onLayerRemoveRef.current(e);
         });
 
-
-        let mapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        });
+        let mapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {});
         mapLayer.addTo(map.current);
         var baseMaps = {
             "Map": mapLayer,
@@ -503,85 +653,104 @@ function App() {
             "Wind": L.tileLayer("https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=7c5cef09fcfe08e6eb62d06c3f6ad76d", {}),
         };
         L.control.layers(baseMaps, overlayMaps).addTo(map.current);
+    }, [ref.current]);
 
-        var markerIcon = L.icon({
-            iconUrl: 'markerWave.png',
-            shadowUrl: 'leaf-shadow.png',
+    return [ref, map];
+}
 
-            iconSize: [32, 32], // size of the icon
-            shadowSize: [50, 64], // size of the shadow
-            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-            shadowAnchor: [4, 62],  // the same for the shadow
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
+function useAsyncEffect(f, key) {
+    useEffect(() => {
+        f();
+    }, key);
+}
 
-        (async function () {
-            spots = await getSpots();
+function App() {
+    const [spot, setSpot] = useState();
+    const [marker, setMarker] = useState();
+    const [topWidget, setTopWidget] = useState("search");
+    const [locationCircle, setLocationCircle] = useState();
+    const locationDistanceInput = useInput(50000);
+    const [ref, map] = useMap({
+        onPopupOpen: e => {
+            if (e.popup._source.options.topWidget) {
+                setTopWidget(e.popup._source.options.topWidget)
+            }
+        },
+        onPopupClose: e => {
+            if (e.popup._source.options.topWidget) {
+                setTopWidget("search")
+            }
+        },
+        onShowLocation: async e => {
+            const { spot, marker } = bestSpotNearAt(e.location);
+            const weather = await getWeatherHistory(spot);
+            setSpot({ spot, weather });
+            setMarker(marker);
 
-            const points = spots.map(x => L.latLng(x.latitude, x.longitude));
-            const bounds = L.latLngBounds(points);
-            const bb = new BoundingBox(bounds);
-
-            cluster.load(spots.map(x => ({ type: "Feature", geometry: { type: "Point", coordinates: [x.longitude, x.latitude] } })));
-            const weatherInfo = await downloadWeatherData(map.current, cluster, [[[bb.getWest(), bb.getSouth(), bb.getEast(), bb.getNorth()], 0]], []);
-            for (const item of weatherInfo) {
-                tree.insert({
-                    minX: item.coord.Lon,
-                    maxX: item.coord.Lon,
-                    minY: item.coord.Lat,
-                    maxY: item.coord.Lat,
-                    item
-                });
-
+            if (locationCircle) {
+                map.current.removeLayer(locationCircle);
             }
 
-            let maxScore = 0;
-            for (const spot of spots) {
-                const near = knn(tree, spot.longitude, spot.latitude, 1)[0];
-                spot.score = spotScore(levelName, ms2Knot(near.item.wind.speed))
-                if (spot.score > maxScore) {
-                    maxScore = spot.score;
+            const circle = L.greatCircle(L.latLng(e.location.y, e.location.x),
+                locationDistanceInput.value,
+                { fill: 'red' }).addTo(map.current);
+            setLocationCircle(circle);
+        },
+        onLayerRemove: async e => {
+            if (e.layer.options.searchMarker) {
+                if (locationCircle) {
+                    map.current.removeLayer(locationCircle);
+                    setLocationCircle(null);
                 }
             }
+        }
+    });
 
-
-            const icons = [spotBadIcon, spotOkIcon, spotGoodIcon, spotBestIcon];
-            for (const spot of spots) {
-                let iconIdx = spotScoreCategory(levelName, spot.score);
-                if (spot.score == maxScore)
-                    iconIdx = 3;
-
-                const marker = L.marker([spot.latitude, spot.longitude], {
-                    icon: icons[iconIdx],
-                    offset: L.point(0, -200),
-                    bouncemarker: true,
-                })
-                    .on("click", async e => {
-                        const weather = await getHistory(spot);
-                        setSpot({ spot, weather });
-                        setMarker(marker);
-                        centerLeafletMapOnMarker(map.current, e.target);
-                    })
-                    .addTo(map.current);
-
-                markersTree.insert({
-                    minX: spot.longitude,
-                    maxX: spot.longitude,
-                    minY: spot.latitude,
-                    maxY: spot.latitude,
-                    marker,
-                    spot
+    const setRoutePolyline = useLeafletPolyline(map);
+    const [distanceType, distanceTypeRefs]
+        = useRadio(["distance", "drive"], "distance");
+    const updateDistanceCircleAndRoute = async (distance, dragging) => {
+        locationCircle.setRadius(distance);
+    }
+    useAsyncEffect(async () => {
+        if (locationCircle) {
+            const bestItem = updateMarkersAsInsideOrOutside(locationCircle);
+            if (bestItem) {
+                const bestSpot = bestItem.spot;
+                const bestMarker = bestItem.marker;
+                const [weather, polyline]
+                    = await getSpotWeatherAndRoute(
+                        bestSpot,
+                        bestMarker,
+                        locationCircle);
+                setSpot({ spot: bestSpot, weather });
+                setMarker(bestMarker);
+                await setRoutePolyline(polyline, { snakeIn: {} });
+                bestMarker.bounce({
+                    duration: 500,
+                    height: 30,
+                    loop: 2
                 });
             }
-        })();
-    }, [ref.current]);
+        } else {
+            console.log(1);
+            updateMarkersAsInsideOrOutside(null);
+            setRoutePolyline(null);
+            setSpot(null);
+            setMarker(null);
+        }
+    }, [locationCircle, locationDistanceInput.value]);
+
     const [level, setLevel] = useState(0);
-    const changeLevel = () => {
-        setLevel((level + 1) % 3);
-    }
-    let levelName = "Novice";
-    if (level == 1) levelName = "Intermediate";
-    else if (level == 2) levelName = "Expert";
+    const levelName = getLevelName();
+    useEffect(() => {
+        loadAndScoreSpots(levelName, map, async (spot, marker) => {
+            const weather = await getWeatherHistory(spot);
+            setSpot({ spot, weather });
+            setMarker(marker);
+            centerLeafletMapOnMarker(map.current, marker);
+        });
+    }, [level]);
 
     const bounceMarker = () => {
         marker.bounce({
@@ -592,19 +761,39 @@ function App() {
     const zoomMarker = () => {
         centerLeafletMapOnMarker(map.current, marker);
     }
+    const showBestAt = async (at) => {
+        let { spot, marker } = bestSpotNearAt(at);
+
+        let marker2 = L.marker([at.lat, at.lng], {
+            icon: new L.Icon.Default(),
+            draggable: false,
+            topWidget: "distance",
+            searchMarker: true
+        }).addTo(map.current);
+        centerLeafletMapOnMarker(map.current, marker2, 0, 0, 10);
+
+
+        const weather = await getWeatherHistory(spot);
+        setSpot({ spot, weather });
+        setMarker(marker);
+
+        if (locationCircle) {
+            map.current.removeLayer(locationCircle);
+        }
+
+        const circle = L.greatCircle(L.latLng(at.lat, at.lng),
+            locationDistanceInput.value,
+            { fill: 'red' }).addTo(map.current);
+        setLocationCircle(circle);
+    };
     return <>
-        {showDistance && <div style="display:flex; position:absolute; width:400px; left: calc(50vw - 200px); top: 50px; z-index: 10;">
-            <div>
-                <div>
-                    <input type="radio" name="distanceType" {...distanceTypeRefs[0]} /> <label>Distance</label>
-                </div>
-                <div>
-                    <input type="radio" name="distanceType" {...distanceTypeRefs[1]} /> <label>Drive Time</label>
-                </div>
-            </div>
-            <input type="range" min="1" max="100000" value="10000" style="width:220px;" {...locationDistanceInput} />
-        </div>}
-        <div class={`windInfo ` + (spot ? "full" : "empty")}>
+        <DistanceWidget visible={topWidget === "distance"}
+            distanceType={distanceType}
+            distanceTypeRefs={distanceTypeRefs}
+            locationDistanceInput={locationDistanceInput}
+            onDistanceChanged={updateDistanceCircleAndRoute} />
+        <LevelWidget map={map} level={level} onNewLevel={setLevel} onNewPosition={showBestAt} />
+        <div class={`windInfo box ` + (spot ? "full" : "empty")}>
             {spot && <>
                 <div>
                     <div>
@@ -664,16 +853,6 @@ function App() {
                 <div>{spot && spot.weather.current.wind_deg} - {spot && degreeToWindText(spot.weather.current.wind_deg)} - {spot && spot.weather.current.wind_speed}</div>
                 <WindRose weather={spot && spot.weather} />
             </>}
-        </div>
-        <div style="position:absolute; width:64; left:0; top:80px; padding:10px; z-index: 10;">
-            <img src="logo.png" style="width: 64px" />
-            <div style="background:white" onClick={changeLevel}>
-                <img src={`level${level}.png`} style="width: 64px" />
-                <span>{levelName}</span>
-            </div>
-            <div>
-                <div>Weather</div>
-            </div>
         </div>
         <div ref={ref} style="width:100%;height:100%;z-index:0" ></div>
     </>;

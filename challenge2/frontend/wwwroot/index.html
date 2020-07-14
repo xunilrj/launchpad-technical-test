@@ -9,8 +9,8 @@
             filter: saturate(20%);
         }
 
-        .saturate30 {
-            filter: saturate(30%)
+        .inactiveMarker {
+            filter: opacity(10%) saturate(10%);
         }
 
         .saturateOnHover {
@@ -21,6 +21,14 @@
             filter: saturate(100%)
         }
 
+        .box {
+            position: absolute;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+        }
+
         .windInfo.empty {
             position: absolute;
             overflow: hidden;
@@ -28,11 +36,8 @@
             height: 20px;
             left: calc(100vw - 60px);
             top: calc(100vh - 75px);
-            padding: 10px;
+
             z-index: 10;
-            background: white;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-            border-radius: 5px;
             transition: all 0.5s;
             transition-timing-function: cubic-bezier(0.64, 0.57, 0.67, 1.53);
         }
@@ -51,6 +56,17 @@
             border-radius: 5px;
             transition: all 0.5s;
             transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .leaflet-geosearch-bar {
+            position: absolute !important;
+            top: 0px;
+            z-index: 1000;
+            left: calc(50vw - 400px);
+        }
+
+        .leaflet-geosearch-bar * {
+            z-index: 1000;
         }
     </style>
     <link rel="stylesheet" href="geosearch/geosearch.css" />

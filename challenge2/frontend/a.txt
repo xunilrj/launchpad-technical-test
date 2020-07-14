@@ -11,7 +11,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[READY] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -22,7 +22,29 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:geoSearch.........[READY] mount node_modules/leaflet-geosearch/dist --to /geos...
+  mount:greatCircle.......[READY] mount node_modules/Leaflet.GreatCircle/dist --to /gr...
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+[2J[3J[HSnowpack
+
+  http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
+  Server started in 22ms.
+
+  mount:web_modules.......[READY] mount $WEB_MODULES --to /web_modules
+  mount:geoSearch.........[READY] mount node_modules/leaflet-geosearch/dist --to /geos...
+  mount:greatCircle.......[READY] mount node_modules/Leaflet.GreatCircle/dist --to /gr...
+  mount:index.............[READY] mount wwwroot --to /
+  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
+
+[2J[3J[HSnowpack
+
+  http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[READY] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -33,7 +55,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -44,7 +66,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -55,7 +77,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -66,29 +88,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
-
-  mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
-  mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
-  mount:greatCircle.......[DONE] mount node_modules/Leaflet.GreatCircle/dist --to /gr...
-  mount:index.............[DONE] mount wwwroot --to /
-  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
-
-[2J[3J[HSnowpack
-
-  http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
-
-  mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
-  mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
-  mount:greatCircle.......[DONE] mount node_modules/Leaflet.GreatCircle/dist --to /gr...
-  mount:index.............[DONE] mount wwwroot --to /
-  build:.js,.jsx,.ts,.tsx.[READY] (default) esbuild
-
-[2J[3J[HSnowpack
-
-  http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -103,7 +103,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -118,7 +118,7 @@
 [2J[3J[HSnowpack
 
   http://localhost:8080 > http://172.30.89.149:8080 > http://172.17.0.1:8080
-  Server started in 24ms.
+  Server started in 22ms.
 
   mount:web_modules.......[DONE] mount $WEB_MODULES --to /web_modules
   mount:geoSearch.........[DONE] mount node_modules/leaflet-geosearch/dist --to /geos...
@@ -132,7 +132,7 @@
 
 ▼ Console
 
-  [error] /root/github/launchpad-technical-test/challenge2/frontend/wwwroot/index.jsx Error: Parse error @:190:140
+  [error] /root/github/launchpad-technical-test/challenge2/frontend/wwwroot/index.jsx Error: Parse error @:188:140
       at parse (/root/github/launchpad-technical-test/challenge2/frontend/node_modules/es-module-lexer/dist/lexer.cjs:1:406)
       at scanCodeImportsExports (/root/github/launchpad-technical-test/challenge2/frontend/node_modules/snowpack/dist-node/index.js:388:27)
       at transformEsmImports (/root/github/launchpad-technical-test/challenge2/frontend/node_modules/snowpack/dist-node/index.js:406:25)
@@ -141,6 +141,6 @@
       at processTicksAndRejections (internal/process/task_queues.js:97:5)
       at async requestHandler (/root/github/launchpad-technical-test/challenge2/frontend/node_modules/snowpack/dist-node/index.js:4178:20)
       at async Server.<anonymous> (/root/github/launchpad-technical-test/challenge2/frontend/node_modules/snowpack/dist-node/index.js:4235:14) {
-    idx: 5078
+    idx: 5033
   }
 
