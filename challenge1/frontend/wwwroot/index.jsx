@@ -30,12 +30,13 @@ function useProgressBar() {
 function Flickity({ children }) {
     const ref = useRef();
     useEffect(() => {
-        new flickity(ref.current, {
+        let flkty = new flickity(ref.current, {
             cellAlign: 'left',
-            contain: true
+            contain: true,
         });
+        ref.current.style.height = "80vh";
     })
-    return <div class="carousel" ref={ref}>
+    return <div class="carousel" ref={ref} style="height:80vh">
         {children}
     </div>;
 }
@@ -86,7 +87,7 @@ function Search({ initialValue, color, executeSearch }) {
     const cssColor = cssColorRgb("color", contrastColor);
     const cssBorderBottomColor = cssColorRgb("border-bottom-color", contrastColor);
     const ifEnterExecute = (e) => {
-        if (e.code.toLowerCase() == "enter" && executeSearch) {
+        if (e.key.toLowerCase() == "enter" && executeSearch) {
             e.target.blur();
             open.current = false;
             executeSearch(e.target.value);
@@ -180,7 +181,6 @@ function App() {
     });
     return <>
         <div autocomplete="on" onSubmit={(e) => {
-            console.log(1);
             executeSearch();
             return false;
         }} class={pendingSearch ? "is-blurred" : null}>
@@ -189,7 +189,7 @@ function App() {
             <Search color={[color_r, color_g, color_b]}
                 executeSearch={executeSearch} />
         </div>
-        <div style="padding-top:50px">
+        <div style="padding-top:50px;height:80vh">
             {pendingSearch && <SearchProgress {...progress} />}
             {valueSearch && <Flickity>
                 {valueSearch.images
