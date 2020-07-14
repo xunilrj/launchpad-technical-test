@@ -85,10 +85,19 @@ function Search({ initialValue, color, executeSearch }) {
     const contrastColor = blackWhiteContrastColor(color);
     const cssColor = cssColorRgb("color", contrastColor);
     const cssBorderBottomColor = cssColorRgb("border-bottom-color", contrastColor);
+    const ifEnterExecute = (e) => {
+        if (e.code.toLowerCase() == "enter" && executeSearch) {
+            e.target.blur();
+            open.current = false;
+            executeSearch(e.target.value);
+        }
+        return true;
+    }
     return <>
         <input ref={inputRef} type="text"
             style={`${cssColor};${cssBorderBottomColor}`}
             placeholder="What're we looking for ?"
+            onKeyDown={ifEnterExecute}
             {...searchInput} />
         <div id="button" onClick={() => {
             if (!open.current) {
@@ -147,7 +156,6 @@ function SearchProgress({ color, v, msg }) {
 function App() {
     const [[color_r, color_g, color_b], setColor] = useState([0, 0, 0]);
     const [progress, setProgress] = useState({ v: 0, msg: "" });
-    console.log(progress)
     let [
         errorSearch,
         executeSearch,
@@ -171,15 +179,16 @@ function App() {
         document.body.style.background = `rgba(${color_r},${color_g},${color_b},1)`;
     });
     return <>
-        <form action="" autocomplete="on" onSubmit={(e) => {
+        <div autocomplete="on" onSubmit={(e) => {
+            console.log(1);
             executeSearch();
             return false;
-        }} class={pendingSearch ? "is-blurred" : ""}>
+        }} class={pendingSearch ? "is-blurred" : null}>
             <ColorPicker color={[color_r, color_g, color_b]}
                 onNewColor={setColor} />
             <Search color={[color_r, color_g, color_b]}
                 executeSearch={executeSearch} />
-        </form>
+        </div>
         <div style="padding-top:50px">
             {pendingSearch && <SearchProgress {...progress} />}
             {valueSearch && <Flickity>

@@ -1,4 +1,13 @@
+# Challenges
+
+Please, contact me if the server is no running.  
+I am using a private server to avoid cloud costs.  
+
 # Challenge 1 – Algorithm-focussed.
+
+http://www.machinaaurum.com:8080   
+Cache is warm for the word: "ferrari"  
+Others will take longer.  
 
 ## Frontend
 
@@ -26,6 +35,8 @@
 ![Alt Text](redditsearch.gif)
 
 # Challenge 2 – Algorithm-focussed.
+
+http://www.machinaaurum.com:8081/  
 
 ## Frontend
 
