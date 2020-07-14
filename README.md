@@ -3,7 +3,7 @@
 Please, contact me if the server is no running.  
 I am using a private server to avoid cloud costs.  
 
-# Challenge 1 – Algorithm-focussed.
+# Challenge 1
 
 http://www.machinaaurum.com:8080   
 Cache is warm for the word: "ferrari"  
@@ -34,7 +34,7 @@ Others will take longer.
 
 ![Alt Text](redditsearch.gif)
 
-# Challenge 2 – Algorithm-focussed.
+# Challenge 2
 
 http://www.machinaaurum.com:8081/  
 
@@ -53,3 +53,5 @@ http://www.machinaaurum.com:8081/
  - Snowpack Proxy https://www.snowpack.dev/  
 
 ![Alt Text](surfsearch.gif)
+
+# Challenge 3 (WIP)
